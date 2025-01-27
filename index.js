@@ -16,12 +16,12 @@ app.options('*', cors());
 // Use routes
 app.use('/', route);
 
-const abc =async()=>{
-  const getStage = await User.getAllStage();
-console.log("getStage:", getStage);
-}
+// const abc =async()=>{
+//   const getStage = await User.getAllStage();
+// console.log("getStage:", getStage);
+// }
 
-abc()
+// abc()
 
 
 

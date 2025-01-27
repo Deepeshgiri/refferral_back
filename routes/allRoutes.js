@@ -13,7 +13,9 @@ const userDashboardController = require('../controllers/userDashboardController'
 const { authenticateUser } = require('../middleware/authMiddleware');
 const { authenticateAdmin } = require('../middleware/authMiddleware');
 
-
+router.get('/testing', (req, res) => {
+    res.send('Hello World!');
+});
 
 // Auth routes
 // router.post('/send-otp', authController.signupOTPHandler); // Send OTP via WhatsApp
@@ -49,5 +51,8 @@ router.get('/api/referrals/list', authenticateUser, referralController.getAllRef
 router.post('/api/admin/login', adminController.adminLogin); // Admin login
 router.put('/api/admin/update-user', authenticateAdmin, adminController.updateUser); // Update user details
 router.get('/api/admin/users', authenticateAdmin, adminController.getAllUsers); // Get all users
+
+
+
 
 module.exports = router;
