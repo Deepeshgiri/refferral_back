@@ -6,7 +6,7 @@ class OTP {
   // Create or update an OTP
   static async upsert(phone, otp, expiresAt) {
     const query = `
-      INSERT INTO OTP (phone, otp, expiresAt)
+      INSERT INTO otp (phone, otp, expiresAt)
       VALUES (?, ?, ?)
       ON DUPLICATE KEY UPDATE
         otp = VALUES(otp),
@@ -31,7 +31,7 @@ class OTP {
 
   // Find an OTP by phone number
   static async findByPhone(phone) {
-    const query = 'SELECT * FROM OTP WHERE phone = ?';
+    const query = 'SELECT * FROM otp WHERE phone = ?';
     const values = [phone];
 
     try {
@@ -53,7 +53,7 @@ class OTP {
 
   // Delete an OTP by phone number
   static async deleteByPhone(phone) {
-    const query = 'DELETE FROM OTP WHERE phone = ?';
+    const query = 'DELETE FROM otp WHERE phone = ?';
     const values = [phone];
 
     try {
@@ -73,7 +73,7 @@ class OTP {
 
   // Delete expired OTPs
   static async deleteExpired() {
-    const query = 'DELETE FROM OTP WHERE expiresAt < NOW()';
+    const query = 'DELETE FROM otp WHERE expiresAt < NOW()';
 
     try {
       return new Promise((resolve, reject) => {
@@ -107,7 +107,7 @@ class OTP {
       console.log(`OTP sent to ${phone}: ${otp}`);
       return otp;
     } catch (error) {
-      throw new Error(`Failed to send OTP: ${error.message}`);
+      throw new Error(`Failed to send OTP from otp sender: ${error.message}`);
     }
   }
 
