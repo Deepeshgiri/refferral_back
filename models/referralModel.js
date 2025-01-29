@@ -4,10 +4,10 @@ const db = require('../config/db');
 
 class Referral {
   // Create a new referral relationship
-  static async createReferral(referrerId, referredId, level) {
+  static async createReferral(referrerId, referredId,) {
     const query = 'INSERT INTO referrals (referrer_id, referred_id, level) VALUES (?, ?, ?)';
     return new Promise((resolve, reject) => {
-      db.query(query, [referrerId, referredId, level], (err, result) => {
+      db.query(query, [referrerId, referredId, 1], (err, result) => {
         if (err) {
           return reject(err);
         }

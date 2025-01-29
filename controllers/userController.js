@@ -11,6 +11,8 @@ const updateStage = (req, res) => {
   });
 };
 
+
+
 // Fetch user progress
 const getUserProgress = (req, res) => {
   const { userId } = req.params;

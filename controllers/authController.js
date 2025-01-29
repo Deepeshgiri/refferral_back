@@ -124,38 +124,38 @@ const signup = async (req, res) => {
       // Create the direct referral relationship (Level 1)
       await Referral.createReferral(referrerId, userId, 1); // Use userId instead of user
 
-      // Get points for Level 1 (Direct referrer)
-      const level1Points = await LevelPoints.getPointsByLevel(1); // Get points for Level 1
-      if (level1Points && level1Points.active_status) {
-        // Add commission (points) to the Level 1 referrer
-        await Commission.createCommission(referrerId, level1Points.points, 1, userId); // Award commission to the referrer
-      }
+      // // Get points for Level 1 (Direct referrer)
+      // const level1Points = await LevelPoints.getPointsByLevel(1); // Get points for Level 1
+      // if (level1Points && level1Points.active_status) {
+      //   // Add commission (points) to the Level 1 referrer
+      //   await Commission.createCommission(referrerId, level1Points.points, 1, userId); // Award commission to the referrer
+      // }
 
-      // Get the upline users and their levels (for higher levels)
-      const upline = await Referral.getUpline(referrerId);
+      // // Get the upline users and their levels (for higher levels)
+      // const upline = await Referral.getUpline(referrerId);
 
-      // Track that this user is referred only once, so loop stops after Level 1
-      let levelReached = 1;
-      for (const { userId: uplineUserId, level } of upline) {
-        levelReached = level + 1; // Increment level for each higher-level user
+      // // Track that this user is referred only once, so loop stops after Level 1
+      // let levelReached = 1;
+      // for (const { userId: uplineUserId, level } of upline) {
+      //   levelReached = level + 1; // Increment level for each higher-level user
 
-        // Get points for this level
-        const levelPoints = await LevelPoints.getPointsByLevel(levelReached);
-        if (levelPoints && levelPoints.active_status) {
-          // Add commission (points) to the upline user only once per signup
-          await Commission.createCommission(uplineUserId, levelPoints.points, levelReached, userId); // Award commission
-        }
+      //   // Get points for this level
+      //   const levelPoints = await LevelPoints.getPointsByLevel(levelReached);
+      //   if (levelPoints && levelPoints.active_status) {
+      //     // Add commission (points) to the upline user only once per signup
+      //     await Commission.createCommission(uplineUserId, levelPoints.points, levelReached, userId); // Award commission
+      //   }
 
-        // If the referral reaches the top level, stop awarding commissions
-        if (levelReached >= 3) { // Example: stop after 3 levels of commission
-          break;
-        }
-      }
+      //   // If the referral reaches the top level, stop awarding commissions
+      //   if (levelReached >= 3) { // Example: stop after 3 levels of commission
+      //     break;
+      //   }
+      // }
     }
 
     const newuser = await User.findByPhone(phone);
     if (!newuser) {
-      return res.status(400).json({ error: 'User not found' });
+      return res.status(400).json({ error: 'User creation failed!' });
     }
 
     // Generate JWT for the new user
@@ -183,10 +183,11 @@ const login = async (req, res) => {
     if (!user) {
       return res.status(400).json({ error: 'User not found' });
     }
+    const Allreferrals = await Referral.getReferralsByUser(user.id);
 
     // Generate JWT
     const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, { expiresIn: '7d' });
-    res.status(200).json({ message: 'Login successful', token, user: { firstName: user.first_name, lastName: user.last_name, id: user.id, phone: user.phone, referralCode: user.referral_code } });
+    res.status(200).json({ message: 'Login successful', token, user: { firstName: user.first_name, lastName: user.last_name, id: user.id, phone: user.phone, referralCode: user.referral_code, allReferralsMade:Allreferrals } });
   } catch (error) {
     console.error('Error logging in:', error.message);
     res.status(500).json({ error: 'Failed to login' });

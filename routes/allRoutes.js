@@ -4,7 +4,7 @@ const router = express.Router();
 // Import controllers
 const authController = require('../controllers/authController');
 const referralController = require('../controllers/referralController');
-const mlmController = require('../controllers/mlmController');
+
 const userController = require('../controllers/userController');
 const adminController = require('../controllers/adminController');
 const userDashboardController = require('../controllers/userDashboardController');
@@ -30,10 +30,6 @@ router.post('/api/login/verify-otp', authController.verifyOTPHandler,authControl
 // Referral routes
 router.post('/generate-referral-code', authenticateUser, referralController.generateReferralCode); // Generate referral code
 router.post('/track-referral', authenticateUser, referralController.trackReferral); // Track referral
-
-// MLM routes
-router.get('/downline/:level', authenticateUser, mlmController.getDownline); // Get downline users
-router.post('/calculate-commissions', authenticateUser, mlmController.calculateCommissions); // Calculate commissions
 
 
 
