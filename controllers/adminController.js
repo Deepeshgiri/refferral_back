@@ -37,17 +37,19 @@ const adminLogin = async (req, res) => {
 // };
 
 const updateUser = async (req, res) => {
-  const { id, first_name, phone, stage } = req.body;
+  let { id, first_name, phone, stage } = req.body;
   console.log(req.body);
+  stage = parseInt(stage);
 
   try {
     // Fetch the current user data
     const currentUser = await User.findById(id); // Assuming you have a method to get user by ID
-    const referrerId = currentUser.referrered_by;
     if (!currentUser) {
       return res.status(400).json({ error: 'User not found' });
     }
 
+    const referrerId = currentUser.referred_by;
+   
     // Check if the stage is being updated
     if (stage && stage !== currentUser.stage) {
       const getStage = await User.getAllStage();

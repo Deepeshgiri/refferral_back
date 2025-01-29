@@ -159,7 +159,7 @@ const signup = async (req, res) => {
     }
 
     // Generate JWT for the new user
-    const token = jwt.sign({ id: userId }, process.env.JWT_SECRET, { expiresIn: '1h' });
+    const token = jwt.sign({ id: userId,referralCode:newReferralcode }, process.env.JWT_SECRET, { expiresIn: '1h' });
 
     // Send success response
     console.log("User created successfully with ID:", userId);
