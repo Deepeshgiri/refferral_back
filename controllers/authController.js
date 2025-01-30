@@ -5,6 +5,7 @@ const User = require('../models/userModel');
 const Commission = require('../models/commissionModel');
 const Referral = require('../models/referralModel');
 const LevelPoints = require('../models/levelPoints');
+const { sendWhatsAppMessage } = require('../utils/whatsappService');
 
 dotenv.config();
 
@@ -124,6 +125,8 @@ const signup = async (req, res) => {
       // Create the direct referral relationship (Level 1)
       await Referral.createReferral(referrerId, userId, 1); // Use userId instead of user
 
+
+
       // // Get points for Level 1 (Direct referrer)
       // const level1Points = await LevelPoints.getPointsByLevel(1); // Get points for Level 1
       // if (level1Points && level1Points.active_status) {
@@ -157,12 +160,17 @@ const signup = async (req, res) => {
     if (!newuser) {
       return res.status(400).json({ error: 'User creation failed!' });
     }
+//send whatsapp welcome message 
+
+await sendWhatsAppMessage(phone,);
 
     // Generate JWT for the new user
     const token = jwt.sign({ id: userId,referralCode:newReferralcode }, process.env.JWT_SECRET, { expiresIn: '1h' });
 
     // Send success response
     console.log("User created successfully with ID:", userId);
+
+
     res.status(201).json({ message: 'User created successfully', token, newuser: { firstName: newuser.first_name, lastName: newuser.last_name, id: newuser.id, phone: newuser.phone, referralCode: newuser.referral_code } });
   } catch (error) {
     console.error('Error creating user:', error.message);

@@ -34,7 +34,12 @@ static async updateUser(userId, name, phone, stage) {
 
   // Get all users (admin only)
   static async getAllUsers() {
-    const query = 'SELECT * FROM users';
+    const query = `
+    SELECT u.id, u.first_name, u.last_name, u.phone, u.stage, u.referred_by,u.referral_code,u.points,u.active_status, u.created_at, COUNT(r.referred_by) AS referral_count
+    FROM users u
+    LEFT JOIN users r ON u.id = r.referred_by
+    GROUP BY u.id;
+  `;
     try {
       const [result] = await db.promise().query(query);
       return result;

@@ -103,7 +103,7 @@ class OTP {
     try {
       await OTP.upsert(phone, otp.toString(), expiresAt);
       // Uncomment the line below to send OTP via WhatsApp
-       await sendWhatsAppMessage(phone, otp);
+      //  await sendWhatsAppMessage(phone, otp);
       console.log(`OTP sent to ${phone}: ${otp}`);
       return otp;
     } catch (error) {
