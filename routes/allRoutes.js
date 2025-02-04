@@ -8,6 +8,7 @@ const referralController = require('../controllers/referralController');
 const userController = require('../controllers/userController');
 const adminController = require('../controllers/adminController');
 const userDashboardController = require('../controllers/userDashboardController');
+const stageController = require('../controllers/stageController');
 
 // Import middleware
 const { authenticateUser } = require('../middleware/authMiddleware');
@@ -48,6 +49,8 @@ router.post('/api/admin/login', adminController.adminLogin); // Admin login
 router.put('/api/admin/update-user', authenticateAdmin, adminController.updateUser); // Update user details
 router.get('/api/admin/users', authenticateAdmin, adminController.getAllUsers); // Get all users
 
+router.get('/api/admin/stages', authenticateAdmin, stageController.getAllStages)
+router.put('/api/admin/stages/:stageId', authenticateAdmin, stageController.updateStage);
 
 
 
