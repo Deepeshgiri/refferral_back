@@ -1,6 +1,6 @@
 // otpService.js
 const db = require('../config/db'); // Import your database connection
-const { sendWhatsAppMessage } = require('../utils/whatsappService');
+const { sendWhatsAppOTPMessage } = require('../utils/whatsappService');
 
 class OTP {
   // Create or update an OTP
@@ -103,7 +103,7 @@ class OTP {
     try {
       await OTP.upsert(phone, otp.toString(), expiresAt);
       // Uncomment the line below to send OTP via WhatsApp
-        await sendWhatsAppMessage(phone, otp);
+        await sendWhatsAppOTPMessage(phone,otp);
       console.log(`OTP sent to ${phone}: ${otp}`);
       return otp;
     } catch (error) {

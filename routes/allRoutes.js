@@ -13,6 +13,7 @@ const stageController = require('../controllers/stageController');
 // Import middleware
 const { authenticateUser } = require('../middleware/authMiddleware');
 const { authenticateAdmin } = require('../middleware/authMiddleware');
+const { getAllRewards , getRewardById, createReward, updateReward, deleteReward} = require('../controllers/rewardControllers');
 
 router.get('/testing', (req, res) => {
     res.send('Hello World!');
@@ -51,6 +52,16 @@ router.get('/api/admin/users', authenticateAdmin, adminController.getAllUsers); 
 
 router.get('/api/admin/stages', authenticateAdmin, stageController.getAllStages)
 router.put('/api/admin/stages/:stageId', authenticateAdmin, stageController.updateStage);
+
+
+
+//reward routes 
+
+router.get('/', getAllRewards);
+router.get('/:id', getRewardById);
+router.post('/', authenticateAdmin, createReward);
+router.put('/:id',authenticateAdmin, updateReward);
+router.delete('/:id', authenticateAdmin, deleteReward);
 
 
 

@@ -1,62 +1,34 @@
-const { Sequelize, DataTypes } = require("sequelize");
+const db = require('../config/db');
 
-const User = require("./user");
-const Referral = require("./referral");
-const { sequelize } = require("./config/database");
-
-
-const Reward = sequelize.define("Reward", {
-  id: {
-    type: DataTypes.INTEGER,
-    primaryKey: true,
-    autoIncrement: true,
-  },
-  userId: {
-    type: DataTypes.INTEGER,
-    allowNull: false,
-    references: {
-      model: User,
-      key: 'id'
-    }
-  },
-  referralId: {
-    type: DataTypes.INTEGER,
-    allowNull: true,
-    references: {
-      model: Referral,
-      key: 'id'
-    }
-  },
-  type: {
-    type: DataTypes.ENUM('referral', 'stage_completion', 'mlm_bonus'),
-    allowNull: false
-  },
-  amount: {
-    type: DataTypes.DECIMAL(10, 2),
-    defaultValue: 0.00
-  },
-  status: {
-    type: DataTypes.ENUM('pending', 'processed', 'paid'),
-    defaultValue: 'pending'
-  },
-  description: {
-    type: DataTypes.STRING,
-    allowNull: true
-  },
-  createdAt: {
-    type: DataTypes.DATE,
-    defaultValue: Sequelize.NOW
-  },
-  updatedAt: {
-    type: DataTypes.DATE,
-    defaultValue: Sequelize.NOW
+class Reward {
+  static async getAllRewards() {
+    const [rows] = await db.query('SELECT * FROM rewards');
+    return rows;
   }
-});
 
-// Define relationships
-Reward.belongsTo(User, { foreignKey: 'userId' });
-Reward.belongsTo(Referral, { foreignKey: 'referralId' });
-User.hasMany(Reward, { foreignKey: 'userId' });
-Referral.hasMany(Reward, { foreignKey: 'referralId' });
+  static async getRewardById(id) {
+    const [rows] = await db.query('SELECT * FROM rewards WHERE id = ?', [id]);
+    return rows[0];
+  }
+
+  static async createReward(name, points_required, min_ref, description, image_url, is_active) {
+    const [result] = await db.query(
+      'INSERT INTO rewards (name, points_required, min_ref, description, image_url, is_active) VALUES (?, ?, ?, ?, ?, ?)',
+      [name, points_required, min_ref, description, image_url, is_active] 
+    );
+    return result.insertId;
+  }
+
+  static async updateReward(id, name, points_required, min_ref, description, image_url, is_active) {
+    await db.query(
+      'UPDATE rewards SET name = ?, points_required = ?, min_ref = ?, description = ?, image_url = ?, is_active = ?, updated_at = NOW() WHERE id = ?',
+      [name, points_required, min_ref, description, image_url, is_active, id]
+    );
+  }
+
+  static async deleteReward(id) {
+    await db.query('DELETE FROM rewards WHERE id = ?', [id]);
+  }
+}
 
 module.exports = Reward;
