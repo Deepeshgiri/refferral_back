@@ -162,7 +162,7 @@ const signup = async (req, res) => {
     }
 //send whatsapp welcome message 
 
-await sendWhatsAppMessage(phone,);
+await sendWhatsAppMessage(phone,firstName);
 
     // Generate JWT for the new user
     const token = jwt.sign({ id: userId,referralCode:newReferralcode }, process.env.JWT_SECRET, { expiresIn: '1h' });

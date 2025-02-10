@@ -1,22 +1,46 @@
 const db = require('../config/db');
 
 class Reward {
-  static async getAllRewards() {
-    const [rows] = await db.query('SELECT * FROM rewards');
-    return rows;
+  static getAllRewards() {
+    return new Promise((resolve, reject) => {
+      db.query('SELECT * FROM rewards', (err, res) => {
+        if (err) {
+          console.log(err);
+          reject(err); // Properly reject in case of an error
+        } else {
+          resolve(res); // Resolve the results
+        }
+      });
+    });
   }
+  
 
-  static async getRewardById(id) {
-    const [rows] = await db.query('SELECT * FROM rewards WHERE id = ?', [id]);
-    return rows[0];
+  static getRewardById(id) {
+    return new Promise((resolve, reject) => {
+      db.query('SELECT * FROM rewards WHERE id = ?', [id], (err, res) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(res || null); // Return first result or null if no record found
+        }
+      });
+    });
   }
+  
 
-  static async createReward(name, points_required, min_ref, description, image_url, is_active) {
-    const [result] = await db.query(
-      'INSERT INTO rewards (name, points_required, min_ref, description, image_url, is_active) VALUES (?, ?, ?, ?, ?, ?)',
-      [name, points_required, min_ref, description, image_url, is_active] 
-    );
-    return result.insertId;
+  static  createReward(name, points_required, min_ref, description, image_url, is_active) {
+    console.log("truuuuuuuuu", is_active)
+    const query = 'INSERT INTO rewards (name, points_required, min_ref, description, image_url, is_active, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, NOW(), NOW())';
+    db.query(query, [name, points_required, min_ref, description, image_url, is_active?1:0],(err,res)=>{
+      if(err){
+        console.log(err);
+      }else{
+        
+        return res;
+      }
+    });
+
+
   }
 
   static async updateReward(id, name, points_required, min_ref, description, image_url, is_active) {

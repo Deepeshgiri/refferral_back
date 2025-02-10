@@ -14,6 +14,7 @@ const stageController = require('../controllers/stageController');
 const { authenticateUser } = require('../middleware/authMiddleware');
 const { authenticateAdmin } = require('../middleware/authMiddleware');
 const { getAllRewards , getRewardById, createReward, updateReward, deleteReward} = require('../controllers/rewardControllers');
+const dynamicUpload = require('../utils/Cloudinary');
 
 router.get('/testing', (req, res) => {
     res.send('Hello World!');
@@ -57,11 +58,11 @@ router.put('/api/admin/stages/:stageId', authenticateAdmin, stageController.upda
 
 //reward routes 
 
-router.get('/', getAllRewards);
+router.get('/rewards', getAllRewards);
 router.get('/:id', getRewardById);
-router.post('/', authenticateAdmin, createReward);
+router.post('/rewards', authenticateAdmin, dynamicUpload('rewards'), createReward);
 router.put('/:id',authenticateAdmin, updateReward);
-router.delete('/:id', authenticateAdmin, deleteReward);
+router.delete('/rewards/:id', authenticateAdmin, deleteReward);
 
 
 
